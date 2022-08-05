@@ -1,8 +1,11 @@
 package org.kriukov.springsecurity.service;
 
-import org.kriukov.springsecurity.model.User;
+import org.kriukov.springsecurity.model.SignUpUserDto;
+import org.kriukov.springsecurity.model.UserDto;
 
 public interface UserService {
 
-    User getByUsername(String username);
+    UserDto getByUsername(String username);
+
+    Long createUser(SignUpUserDto signUpUserDto);
 }

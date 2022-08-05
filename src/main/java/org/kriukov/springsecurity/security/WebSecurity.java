@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import static org.kriukov.springsecurity.security.SecurityConstants.SIGN_IN_URL;
 import static org.kriukov.springsecurity.security.SecurityConstants.SIGN_UP_URL;
 
 @EnableWebSecurity
@@ -33,10 +34,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http
                 .cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SIGN_IN_URL).permitAll()
+                .antMatchers(HttpMethod.GET, "/api/admin").hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), userService))
-
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), userDetailsService))
+                .addFilter(new JWTAutorizationFilter(authenticationManager(), userDetailsService))
+                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
