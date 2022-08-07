@@ -31,9 +31,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public Long createUser(SignUpUserDto signUpUserDto) {
         User user = modelMapper.map(signUpUserDto, User.class);
+        user.setUsername(signUpUserDto.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
         user.setRole(Role.USER);
 
-        return userRepository.saveAndFlush(user).getId();
+        return userRepository.save(user).getId();
     }
 }
